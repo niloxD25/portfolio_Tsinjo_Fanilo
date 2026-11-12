@@ -129,14 +129,6 @@ const navItems = {
     font-size: 27px;
   }
 
-  .navbar nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
   .navbar nav a {
     font-size: 11px;
   }

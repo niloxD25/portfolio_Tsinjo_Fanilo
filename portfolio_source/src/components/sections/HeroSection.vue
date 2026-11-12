@@ -39,11 +39,6 @@ const content = {
       class="portrait"
     />
 
-    <div class="hero-footer">
-      <span>Based in Antananarivo, Madagascar</span>
-      <span>© {{ new Date().getFullYear() }}</span>
-    </div>
-
   </main>
 </template>
 
@@ -110,21 +105,6 @@ const content = {
   pointer-events: none;
 }
 
-.hero-footer {
-  position: relative;
-  z-index: 4;
-  width: 100%;
-  margin-top: auto;
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #777;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  flex-shrink: 0;
-}
-
 @media (max-width: 768px) {
   .title-block {
     top: 30%;
@@ -153,11 +133,6 @@ const content = {
     height: 48%;
     max-width: 85%;
     right: 7%;
-  }
-
-  .hero-footer {
-    font-size: 8px;
-    letter-spacing: 1px;
   }
 }
 </style>

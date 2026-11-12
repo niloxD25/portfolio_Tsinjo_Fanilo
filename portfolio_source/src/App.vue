@@ -1,11 +1,18 @@
-<script setup></script>
+
+<script setup>
+import { ref } from 'vue'
+
+import MainNavbar from './components/layout/MainNavbar.vue'
+import HeroSection from './components/sections/HeroSection.vue'
+
+const lang = ref('fr')
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
-</template>
+  <MainNavbar
+    :lang="lang"
+    @change-language="lang = $event"
+  />
 
-<style scoped></style>
+  <HeroSection :lang="lang" />
+</template>

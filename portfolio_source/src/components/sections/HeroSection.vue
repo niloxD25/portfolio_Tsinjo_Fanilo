@@ -53,14 +53,13 @@ const content = {
   min-height: 100svh;
   position: relative;
   overflow: hidden;
-  padding: 30px 7%;
   display: flex;
   flex-direction: column;
 }
 
 .title-block {
   position: absolute;
-  top: 40%;
+  top: 35%;
   left: 0;
   width: 100%;
   transform: translateY(-50%);
@@ -126,15 +125,9 @@ const content = {
   flex-shrink: 0;
 }
 
-@media (max-width: 900px) {
-  .hero {
-    padding: 25px 5%;
-  }
-}
-
 @media (max-width: 768px) {
   .title-block {
-    top: 40%;
+    top: 30%;
     padding: 0 6%;
   }
 

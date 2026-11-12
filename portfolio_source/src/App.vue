@@ -8,6 +8,7 @@ import Footer from './components/layout/Footer.vue'
 import HeroSection from './components/sections/HeroSection.vue'
 import AboutSection from './components/sections/AboutSection.vue'
 import SkillsSection from './components/sections/SkillsSection.vue'
+import ContactSection from './components/sections/ContactSection.vue'
 
 const lang = ref('fr')
 </script>
@@ -23,6 +24,8 @@ const lang = ref('fr')
   <AboutSection :lang="lang" />
 
   <SkillsSection :lang="lang" />
+
+  <ContactSection :lang="lang" />
 
   <Footer />
 </template>

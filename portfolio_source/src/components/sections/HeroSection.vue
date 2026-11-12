@@ -130,7 +130,6 @@ const content = {
   }
 
   .portrait {
-    height: 48%;
     max-width: 85%;
     right: 7%;
   }

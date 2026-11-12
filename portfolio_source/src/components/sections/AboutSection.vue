@@ -46,7 +46,7 @@ const content = {
     }
     ],
     education: 'FORMATION',
-    button: 'DÉCOUVRIR MES PROJETS'
+    button: 'Télécharger mon CV'
   },
 
   en: {
@@ -87,7 +87,7 @@ const content = {
     }
     ],
     education: 'EDUCATION',
-    button: 'EXPLORE MY PROJECTS'
+    button: 'Download my resume'
   }
 }
 </script>
@@ -122,9 +122,12 @@ const content = {
           </p>
         </div>
 
-        <a href="#projects" class="about-button">
-          {{ content[lang].button }}
-          <span>↗</span>
+        <a
+            href="/documents/CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
+            download="CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
+            class="about-button"
+            >
+            {{ content[lang].button }}
         </a>
 
       </div>
@@ -187,7 +190,6 @@ const content = {
                 class="institution-link"
                 >
                 {{ education.institution }}
-                <span>↗</span>
                 </a>
 
                 <p>{{ education.location }}</p>

@@ -17,6 +17,7 @@ const lang = ref('fr')
   <MainNavbar
     :lang="lang"
     @change-language="lang = $event"
+    class="navbar"
   />
 
   <HeroSection :lang="lang" />
@@ -29,3 +30,13 @@ const lang = ref('fr')
 
   <Footer />
 </template>
+
+<style scoped>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #111111;
+    height: 80px;
+  }
+</style>

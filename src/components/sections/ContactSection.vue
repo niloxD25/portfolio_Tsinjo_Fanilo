@@ -408,10 +408,6 @@ function sendMessage() {
   color: var(--color-accent);
 }
 
-.contact-form-container {
-  padding: 35px;
-}
-
 .contact-form-container h3 {
   margin-bottom: 35px;
   font-size: 22px;

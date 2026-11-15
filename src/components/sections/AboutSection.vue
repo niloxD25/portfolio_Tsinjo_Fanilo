@@ -1,5 +1,6 @@
-
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
 defineProps({
   lang: {
     type: String,
@@ -36,16 +37,16 @@ const content = {
       }
     ],
     educations: [
-    {
+      {
         degree: 'Licence en informatique',
         institution: 'ITUniversity',
         url: 'https://www.ituniversity.mg/',
         location: 'Antananarivo, Madagascar',
         period: '',
         description: ''
-    }
+      }
     ],
-    education: 'FORMATION',
+    educationTitle: 'FORMATION',
     button: 'Télécharger mon CV'
   },
 
@@ -77,152 +78,172 @@ const content = {
       }
     ],
     educations: [
-    {
+      {
         degree: 'Bachelor’s Degree in Computer Science',
         institution: 'ITUniversity',
         url: 'https://www.ituniversity.mg/',
         location: 'Antananarivo, Madagascar',
         period: '',
         description: ''
-    }
+      }
     ],
-    education: 'EDUCATION',
+    educationTitle: 'EDUCATION',
     button: 'Download my resume'
   }
 }
+
+// Apparition progressive au scroll
+const root = ref(null)
+let observer = null
+
+onMounted(() => {
+  const items = root.value?.querySelectorAll('.reveal') ?? []
+
+  if (!('IntersectionObserver' in window)) {
+    items.forEach((el) => el.classList.add('visible'))
+    return
+  }
+
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible')
+          observer.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: 0.15 }
+  )
+
+  items.forEach((el) => observer.observe(el))
+})
+
+onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>
-  <section id="about" class="about-section">
-
+  <section id="about" ref="root" class="about-section">
     <div class="about-container">
 
-      <!-- LEFT COLUMN -->
+      <!-- COLONNE GAUCHE -->
       <div class="about-intro">
 
-        <span class="section-label">
-          <span class="label-line"></span>
+        <span class="section-label reveal">
           {{ content[lang].eyebrow }}
         </span>
 
-        <h2>
+        <h2 class="reveal" style="--d: 0.08s">
           {{ content[lang].title }}
         </h2>
 
-        <h3>
+        <h3 class="reveal" style="--d: 0.16s">
           {{ content[lang].introduction }}
         </h3>
 
         <div class="about-description">
           <p
-            v-for="paragraph in content[lang].paragraphs"
+            v-for="(paragraph, i) in content[lang].paragraphs"
             :key="paragraph"
+            class="reveal"
+            :style="{ '--d': `${0.24 + i * 0.08}s` }"
           >
             {{ paragraph }}
           </p>
         </div>
 
         <a
-            href="/documents/CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
-            download="CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
-            class="about-button"
-            >
-            {{ content[lang].button }}
+          href="/portfolio_Tsinjo_Fanilo/documents/CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
+          download="CV_ANDRIAMANALINTSOA_Tsinjo_Fanilo_WR.pdf"
+          class="about-button reveal"
+          style="--d: 0.5s"
+        >
+          {{ content[lang].button }}
+          <span class="arrow" aria-hidden="true">↓</span>
         </a>
 
       </div>
 
-      <!-- RIGHT COLUMN -->
+      <!-- COLONNE DROITE -->
       <div class="about-details">
 
         <div class="focus-block">
+          <span class="section-label reveal">
 
-          <span class="section-label">
-            <span class="label-line"></span>
             {{ content[lang].focusTitle }}
           </span>
 
-          <article
-            v-for="area in content[lang].areas"
-            :key="area.number"
-            class="focus-item"
-          >
-            <span class="focus-number">
-              {{ area.number }}
-            </span>
+          <div class="focus-list">
+            <article
+              v-for="(area, i) in content[lang].areas"
+              :key="area.number"
+              class="focus-item reveal"
+              :style="{ '--d': `${0.08 + i * 0.1}s` }"
+            >
+              <span class="focus-number">{{ area.number }}</span>
 
-            <div class="focus-content">
-              <h3>{{ area.title }}</h3>
-              <p>{{ area.description }}</p>
-            </div>
+              <div class="focus-content">
+                <h3>{{ area.title }}</h3>
+                <p>{{ area.description }}</p>
+              </div>
 
-          </article>
-
+              <span class="focus-arrow" aria-hidden="true">↗</span>
+            </article>
+          </div>
         </div>
 
-        
         <div class="education-block">
+          <span class="section-label reveal">
 
-        <span class="section-label">
-            <span class="label-line"></span>
-            {{ content[lang].educationsTitle }}
-        </span>
+            {{ content[lang].educationTitle }}
+          </span>
 
-        <div class="education-list">
-
+          <div class="education-list">
             <article
-            v-for="(education, index) in content[lang].educations"
-            :key="education.institution + index"
-            class="education-content"
+              v-for="(education, index) in content[lang].educations"
+              :key="education.institution + index"
+              class="education-card reveal"
             >
-            <div class="education-icon">
-                EDU.
-            </div>
+              <div class="education-icon" aria-hidden="true">EDU.</div>
 
-            <div class="education-info">
-
+              <div class="education-info">
                 <h3>{{ education.degree }}</h3>
 
                 <a
-                :href="education.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="institution-link"
+                  :href="education.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="institution-link"
                 >
-                {{ education.institution }}
+                  {{ education.institution }}
+                  <span aria-hidden="true">↗</span>
                 </a>
 
-                <p>{{ education.location }}</p>
+                <p class="education-location">{{ education.location }}</p>
 
-                <span v-if="education.period">
-                {{ education.period }}
+                <span v-if="education.period" class="education-period">
+                  {{ education.period }}
                 </span>
 
-                <p
-                v-if="education.description"
-                class="education-description"
-                >
-                {{ education.description }}
+                <p v-if="education.description" class="education-description">
+                  {{ education.description }}
                 </p>
-
-            </div>
+              </div>
             </article>
-
-        </div>
-
+          </div>
         </div>
 
       </div>
-
     </div>
-
   </section>
 </template>
 
 <style scoped>
 .about-section {
+  --accent: var(--color-accent, #e8a45c);
   position: relative;
   min-height: 100vh;
+  padding: 110px 0;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -235,40 +256,57 @@ const content = {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
+  column-gap: clamp(40px, 6vw, 100px);
+  align-items: start;
 }
 
+/* Apparition au scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--d, 0s);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Label de section */
 .section-label {
   display: flex;
   align-items: center;
   gap: 12px;
-  color: var(--color-accent);
+  color: var(--accent);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
 }
 
-.label-line {
-  width: 28px;
-  height: 1px;
-  background: var(--color-accent);
+/* Colonne gauche */
+.about-intro {
+  position: sticky;
+  top: 110px;
 }
 
 .about-intro h2 {
-  max-width: 600px;
-  margin-top: 30px;
+  max-width: 620px;
+  margin-top: 28px;
   font-size: clamp(36px, 4.5vw, 64px);
-  line-height: 1.12;
-  letter-spacing: -2px;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
   font-weight: 700;
+  background-clip: text;
+  color: #fff; /* repli */
 }
 
 .about-intro h3 {
-  margin-top: 28px;
+  margin-top: 26px;
   font-size: 19px;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 .about-description {
@@ -277,58 +315,87 @@ const content = {
 }
 
 .about-description p {
-  margin-bottom: 17px;
-  font-size: 14px;
+  margin-bottom: 16px;
+  font-size: 14.5px;
   line-height: 1.9;
-  color: #999;
+  color: #a0a0a0;
 }
 
+/* Bouton CV */
 .about-button {
   display: inline-flex;
   align-items: center;
-  gap: 30px;
-  margin-top: 20px;
-  padding: 15px 20px;
-  border: 1px solid #555;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 14px 14px 14px 26px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
   color: #fff;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 1px;
-  transition: all .3s;
+  letter-spacing: 0.8px;
+  transition: background 0.3s, color 0.3s, border-color 0.3s,
+    transform 0.3s, box-shadow 0.3s;
+}
+
+.about-button .arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #111;
+  font-size: 16px;
+  transition: transform 0.3s;
 }
 
 .about-button:hover {
-  background: var(--color-accent);
-  color: #111;
-  border-color: var(--color-accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
-.about-button span {
-  font-size: 18px;
+.about-button:hover .arrow {
+  transform: translateY(2px);
 }
 
-.focus-block {
-  width: 100%;
+/* Domaines */
+.focus-list {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .focus-item {
+  position: relative;
   display: grid;
-  grid-template-columns: 35px 1fr 20px;
-  gap: 15px;
+  grid-template-columns: 44px 1fr 24px;
+  gap: 16px;
   align-items: start;
-  padding: 25px 0;
-  border-bottom: 1px solid #333;
+  padding: 24px 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: opacity 0.7s ease, transform 0.3s, background 0.3s,
+    border-color 0.3s;
 }
 
-.focus-item:first-of-type {
-  margin-top: 15px;
+.focus-item.visible:hover {
+  transform: translateX(6px);
+  background: rgba(232, 164, 92, 0.06);
+  border-color: rgba(232, 164, 92, 0.35);
 }
 
 .focus-number {
-  font-size: 12px;
-  color: var(--color-accent);
-  padding-top: 4px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--accent);
+  padding-top: 2px;
 }
 
 .focus-content h3 {
@@ -337,83 +404,64 @@ const content = {
 }
 
 .focus-content p {
-  margin-top: 9px;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #888;
-}
-
-.education-block {
-  margin-top: 55px;
-}
-
-.education-content {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-top: 22px;
-  padding: 22px;
-  background: #202020;
-  border: 1px solid #303030;
-}
-
-.education-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 55px;
-  height: 55px;
-  flex-shrink: 0;
-  background: #29241e;
-  color: var(--color-accent);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.education-content h3 {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.education-content p {
-  margin-top: 7px;
-  color: var(--color-accent);
+  margin-top: 8px;
   font-size: 13px;
+  line-height: 1.7;
+  color: #8c8c8c;
 }
 
-.education-content span {
-  display: block;
-  margin-top: 5px;
-  color: #777;
-  font-size: 11px;
+.focus-arrow {
+  font-size: 18px;
+  color: #555;
+  transition: color 0.3s, transform 0.3s;
 }
 
+.focus-item:hover .focus-arrow {
+  color: var(--accent);
+  transform: translate(3px, -3px);
+}
+
+/* Formation */
+.education-block {
+  margin-top: 50px;
+}
 
 .education-list {
+  margin-top: 22px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.education-content {
+.education-card {
   display: flex;
   align-items: flex-start;
   gap: 20px;
   padding: 22px;
-  background: #202020;
-  border: 1px solid #303030;
-  transition: border-color .3s;
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: opacity 0.7s ease, border-color 0.3s;
+}
+
+.education-card:hover {
+  border-color: rgba(232, 164, 92, 0.35);
 }
 
 .education-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 55px;
   height: 55px;
   flex-shrink: 0;
-  background: #29241e;
-  color: var(--color-accent);
+  border-radius: 14px;
+  background: rgba(232, 164, 92, 0.12);
+  border: 1px solid rgba(232, 164, 92, 0.25);
+  color: var(--accent);
   font-size: 12px;
   font-weight: 700;
 }
@@ -427,41 +475,46 @@ const content = {
 .institution-link {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   margin-top: 8px;
-  color: var(--color-accent);
+  color: var(--accent);
   font-size: 13px;
   text-decoration: none;
-  transition: color .3s;
+  transition: color 0.3s;
 }
 
 .institution-link:hover {
   color: #fff;
 }
 
-.institution-link span {
-  font-size: 14px;
+.education-location {
+  margin-top: 6px;
+  color: #808080;
+  font-size: 12px;
 }
 
-.education-info p {
-  margin-top: 7px;
-  color: #777;
-  font-size: 11px;
-}
-
-.education-info > span {
+.education-period {
   display: block;
   margin-top: 6px;
   color: #999;
   font-size: 11px;
 }
 
-.education-info .education-description {
+.education-description {
   margin-top: 12px;
+  color: #808080;
+  font-size: 12px;
   line-height: 1.7;
 }
 
+/* Accessibilité (focus clavier) */
+.about-button:focus-visible,
+.institution-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
 
+/* Responsive */
 @media (max-width: 1000px) {
   .about-section {
     padding-left: 5%;
@@ -470,9 +523,18 @@ const content = {
 }
 
 @media (max-width: 768px) {
+  .about-section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
   .about-container {
     grid-template-columns: 1fr;
-    gap: 65px;
+    row-gap: 60px;
+  }
+
+  .about-intro {
+    position: static;
   }
 
   .about-intro h2 {
@@ -486,10 +548,6 @@ const content = {
   .education-block {
     margin-top: 40px;
   }
-
-  .about-index {
-    padding-top: 55px;
-  }
 }
 
 @media (max-width: 400px) {
@@ -497,13 +555,30 @@ const content = {
     font-size: 13px;
   }
 
+  .focus-item {
+    padding: 18px 16px;
+    gap: 12px;
+  }
+
   .focus-content h3 {
     font-size: 15px;
   }
 
-  .education-content {
+  .education-card {
     padding: 15px;
     gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  * {
+    transition: none !important;
   }
 }
 </style>

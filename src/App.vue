@@ -33,7 +33,6 @@ const lang = ref('fr')
 
 <style scoped>
   .navbar {
-    position: sticky;
     top: 0;
     z-index: 1000;
     background: #111111;

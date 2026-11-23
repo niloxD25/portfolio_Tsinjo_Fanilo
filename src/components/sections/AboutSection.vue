@@ -144,7 +144,7 @@ onBeforeUnmount(() => observer?.disconnect())
         <div class="about-description">
           <p
             v-for="(paragraph, i) in content[lang].paragraphs"
-            :key="paragraph"
+            :key="i"
             class="reveal"
             :style="{ '--d': `${0.24 + i * 0.08}s` }"
           >
